@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-//const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 
 const user = new Schema({
@@ -15,14 +15,14 @@ const user = new Schema({
   deleted: { type: Boolean, default: false },
 });
 
-// user.pre('save', async function (next) {
-//     const user = this;
-//     if(!user.isModified('password')) return next();
-//     const salt = await bcrypt.genSalt(9);
-//     const hash = await bcrypt.hash(user.password, salt);
-//     this.password = hash;
-//     next();
-// });
+user.pre('save', async function (next) {
+    const user = this;
+    if(!user.isModified('password')) return next();
+    const salt = await bcrypt.genSalt(9);
+    const hash = await bcrypt.hash(user.password, salt);
+    this.password = hash;
+    next();
+});
 
 const User = mongoose.model('User', user);
 module.exports = User;
