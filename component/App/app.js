@@ -11,9 +11,6 @@ mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTo
     console.log(err);
 });
 
-
-
-
 const app = express();
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false ,limit: '50mb'}));
@@ -24,7 +21,7 @@ app.use(bodyParser.json());
 // Cors for cross origin allowance
 app.use(cors()); 
 
-require('./appRoute')(app);
+require('./router')(app);
 
 const http = require('http');
 const server = http.Server(app);
@@ -32,3 +29,4 @@ const port = process.env.PORT || 3000;
 server.listen(port, () => {
     console.log(`Server is running on localhost:${port}`);
 });
+

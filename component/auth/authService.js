@@ -24,7 +24,6 @@ try{
         fullName: req.body.fullName,
         dateOfBirth: req.body.dateOfBirth,
     });
-    console.log(userObject);
     let user = await userObject.save();
 
     return res.status(201).json({
@@ -60,9 +59,9 @@ exports.login = async (req, res) => {
                 message: 'Email or password is incorrect',
             });
         }
-        const token = jwt.sign({id: user._id, email: user.email}, process.env.JWT_SECRET, {expiresIn: '1d'});
+        user.password = undefined;
+        const token = jwt.sign({user: user}, process.env.JWT_SECRET, {expiresIn: '1d'});
         return res.status(200).send({
-            id: user._id,
             token: token,
         });
     }catch(err){
@@ -71,4 +70,12 @@ exports.login = async (req, res) => {
             data: err,
         });
     }
+}
+
+exports.profile = (req, res) => {
+    let user = req.user;
+    user.password = undefined;
+    return res.status(200).send({
+        user: user,
+    });
 }
